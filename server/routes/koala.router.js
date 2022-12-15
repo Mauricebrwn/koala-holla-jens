@@ -48,6 +48,15 @@ koalaRouter.post('/', (req, res)=>{
 
 // PUT
 
+koalaRouter.put('/./:id', (req,res) => {
+    console.log('req.params:', req.params);
+    console.log('req.body:', req.body);
+
+    let idToUpdate = req.params.id;
+    let koalaReady = req.body.ready_to_transfer;
+
+    let sql
+})
 
 // DELETE
 

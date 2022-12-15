@@ -38,7 +38,7 @@ function fetchAndRenderKoalas(){
     $('#viewKoalas').empty();
     for (let koala of dbResponse) {
       $('#viewKoalas').append(`
-        <tr>
+        <tr ${koala.id}>
           <td>${koala.name}</td>
           <td>${koala.age}</td>
           <td>${koala.gender}</td>
@@ -83,7 +83,21 @@ function createKoala (koalaToAdd) {
   });
 }
 
-function switchKoalaTOReady
+function switchKoalaTOReady () {
+  let idToUpdate = $(this).parent().parent().data().id;
+
+  $.ajax({
+    method: 'PUT',
+    url: `/koalas/${idToUpdate}`,
+    data: {
+      ready_to_transfer: 'Y'
+    }
+  }).then((response)=>{
+    fetchAndRenderKoalas();
+  }).catch((response)=>{
+    console.log('Error in PUT /koalas: ', response);
+  })
+}
 
 // function saveKoala( newKoala ){
 //   console.log( 'in saveKoala', newKoala );
