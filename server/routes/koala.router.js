@@ -1,3 +1,4 @@
+const { application, response } = require('express');
 const express = require('express');
 const koalaRouter = express.Router();
 const pool = require('../modules/pool.js');
@@ -24,7 +25,26 @@ koalaRouter.get ('/', (req,res) => {
 })
 
 // POST
+koalaRouter.post('/', (req, res)=>{
+    console.log('POST /koalas');
+    console.log(req.body);
 
+    let sqlQuery =`
+    INSERT INTO "koalas"
+    ("name", "age","gender","ready_to_transfer","notes")
+    VALUES
+    ($1,$2,$3,$4,$5);
+    `
+    let sqlValues = [req.body.name,req.body.age,req.body.gender,req.body.ready_to_transfer,req.body.notes];
+    pool.query(sqlQuery,sqlValues)
+    .then((response) =>{
+        res.sendStatus(200);
+    })
+    .catch((response)=>{
+        console.log('something broke in post', response);
+        res.sendStatus(500)
+    })
+})
 
 // PUT
 
