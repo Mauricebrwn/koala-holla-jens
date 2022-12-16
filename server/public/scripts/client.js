@@ -2,31 +2,13 @@ console.log( 'js' );
 
 $( document ).ready( function(){
   console.log( 'JQ' );
-  // Establish Click Listeners
-  //setupClickListeners()
-  // load existing koalas on page load
   fetchAndRenderKoalas();
 $('#addButton').on('click',createKoala);
+$('body').on('click', '#deleteButton', deleteKoala);
 $('body').on('click', '#readyButton', switchKoalaTOReady);
-}); // end doc ready
+$('body').on('click', '#notReadyButton', switchKoalaFromReady);
+}); 
 
-// function setupClickListeners() {
-//   $( '#addButton' ).on( 'click', function(){
-//     console.log( 'in addButton on click' );
-//     // get user input and put in an object
-//     // NOT WORKING YET :(
-//     // using a test object
-//     let koalaToSend = {
-//       name: 'testName',
-//       age: 'testName',
-//       gender: 'testName',
-//       readyForTransfer: 'testName',
-//       notes: 'testName',
-//     };
-//     // call saveKoala with the new obejct
-//     saveKoala( koalaToSend );
-//   }); 
-// }
 
 function fetchAndRenderKoalas(){
   console.log( 'in getKoalas' );
@@ -45,6 +27,12 @@ function fetchAndRenderKoalas(){
           <td>${koala.gender}</td>
           <td>${koala.ready_to_transfer}</td>
           <td>${koala.notes}</td>
+          <td>
+            <button type="button" id="notReadyButton">Go Back!!!!</button>
+          </td>
+          <td>
+            <button type="button" id="deleteButton">Delete</button>
+          </td>
         </tr>
         `)
       } else if (koala.ready_to_transfer == 'N') {
@@ -57,6 +45,9 @@ function fetchAndRenderKoalas(){
           <td>${koala.notes}</td>
           <td>
             <button type="button" id="readyButton">Ready TO transfer</button>
+          </td>
+          <td>
+            <button type="button" id="deleteButton">Delete</button>
           </td>
         </tr>
       `)
@@ -111,8 +102,31 @@ function switchKoalaTOReady () {
   })
 }
 
-// function saveKoala( newKoala ){
-//   console.log( 'in saveKoala', newKoala );
-  // ajax call to server to get koalas
- 
-//}
+function switchKoalaFromReady () {
+  let idToUpdate = $(this).parent().parent().data().id
+  $.ajax({
+    method: 'PUT',
+    url: `/koalas/${idToUpdate}`,
+    data: {
+      ready_to_transfer: 'N'
+    }
+  }).then((response)=>{
+    // console.log(response);
+    fetchAndRenderKoalas();
+  }).catch((response)=>{
+    console.log('Error in PUT /koalas: ', response);
+  })
+}
+
+function deleteKoala () {
+  let idToDelete = $(this).parent().parent().data().id
+
+  $.ajax({
+    method: 'DELETE',
+    url: `/koalas/${idToDelete}`
+  }).then((response) => {
+    fetchAndRenderKoalas ();
+  }).catch((error) => {
+    console.log('delete koalas is broke',error);
+  })
+}
