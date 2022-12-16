@@ -131,6 +131,7 @@ function switchKoalaFromReady () {
   //   }
   // })
   // }
+
 function deleteKoala () {
   let idToDelete = $(this).parent().parent().data().id;
   swal("Are you sure?", {
