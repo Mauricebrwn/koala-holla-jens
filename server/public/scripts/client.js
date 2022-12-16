@@ -37,8 +37,19 @@ function fetchAndRenderKoalas(){
   }).then((dbResponse) => {
     $('#viewKoalas').empty();
     for (let koala of dbResponse) {
-      $('#viewKoalas').append(`
-        <tr ${koala.id}>
+      if (koala.ready_to_transfer == 'Y'){
+        $('#viewKoalas').append(`
+        <tr data-id=${koala.id}>
+          <td>${koala.name}</td>
+          <td>${koala.age}</td>
+          <td>${koala.gender}</td>
+          <td>${koala.ready_to_transfer}</td>
+          <td>${koala.notes}</td>
+        </tr>
+        `)
+      } else if (koala.ready_to_transfer == 'N') {
+        $('#viewKoalas').append(`
+        <tr data-id=${koala.id}>
           <td>${koala.name}</td>
           <td>${koala.age}</td>
           <td>${koala.gender}</td>
@@ -49,6 +60,7 @@ function fetchAndRenderKoalas(){
           </td>
         </tr>
       `)
+      }
     }
   }).catch((dbErr) => {
     console.log('Error in getKoalas response: ', dbErr);
@@ -84,8 +96,7 @@ function createKoala (koalaToAdd) {
 }
 
 function switchKoalaTOReady () {
-  let idToUpdate = $(this).parent().parent().data().id;
-
+  let idToUpdate = $(this).parent().parent().data().id
   $.ajax({
     method: 'PUT',
     url: `/koalas/${idToUpdate}`,
@@ -93,6 +104,7 @@ function switchKoalaTOReady () {
       ready_to_transfer: 'Y'
     }
   }).then((response)=>{
+    // console.log(response);
     fetchAndRenderKoalas();
   }).catch((response)=>{
     console.log('Error in PUT /koalas: ', response);

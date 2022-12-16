@@ -59,8 +59,8 @@ Your final product may look something like this:
 1. ✅ add a Koala to the database. 
     *  ✅ Make a form with the appropriate info.    
 2.  ✅ Save the koala in the database. 
-3. Mark a Koala ready for transfer. 
-    * Each koala needs a button in that reads 'Ready for Transfer'. 
-    * When the user clicks on the button, it should update the database for the specific Koala. 
-    * The 'Ready for Transfer' button should only appear for Koalas that haven't yet been marked ready for transfer.
+3. ✅ Mark a Koala ready for transfer. 
+    * ✅ Each koala needs a button in that reads 'Ready for Transfer'. 
+    * ✅ When the user clicks on the button, it should update the database for the specific Koala. 
+    * ✅ The 'Ready for Transfer' button should only appear for Koalas that haven't yet been marked ready for transfer.
 5. Make a `database.sql` file in the repo.
