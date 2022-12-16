@@ -5,6 +5,7 @@ $( document ).ready( function(){
   fetchAndRenderKoalas();
 $('#addButton').on('click',createKoala);
 $('body').on('click', '#deleteButton', deleteKoala);
+// $('body').on('click', '.swal-button--confirm',deleteKoala)
 $('body').on('click', '#readyButton', switchKoalaTOReady);
 $('body').on('click', '#notReadyButton', switchKoalaFromReady);
 }); 
@@ -12,7 +13,6 @@ $('body').on('click', '#notReadyButton', switchKoalaFromReady);
 
 function fetchAndRenderKoalas(){
   console.log( 'in getKoalas' );
-  // ajax call to server to get koalas
   $.ajax({
     type: 'GET',
     url: '/koalas'
@@ -56,10 +56,9 @@ function fetchAndRenderKoalas(){
   }).catch((dbErr) => {
     console.log('Error in getKoalas response: ', dbErr);
   })
-  
-} // end getKoalas
+}
 
-function createKoala (koalaToAdd) {
+function createKoala () {
   let koalaName = $('#nameIn').val();
   let koalaAge = $('#ageIn').val();
   let koalaGender = $('#genderIn').val();
@@ -84,6 +83,12 @@ function createKoala (koalaToAdd) {
   }).catch((response)=>{
     console.log('error in post', response)
   });
+
+  $('#nameIn').val('');
+  $('#ageIn').val('');
+  $('#genderIn').val('');
+  $('#readyToTransferIn').val('');
+  $('#notesIn').val('');
 }
 
 function switchKoalaTOReady () {
@@ -95,7 +100,6 @@ function switchKoalaTOReady () {
       ready_to_transfer: 'Y'
     }
   }).then((response)=>{
-    // console.log(response);
     fetchAndRenderKoalas();
   }).catch((response)=>{
     console.log('Error in PUT /koalas: ', response);
@@ -111,22 +115,40 @@ function switchKoalaFromReady () {
       ready_to_transfer: 'N'
     }
   }).then((response)=>{
-    // console.log(response);
     fetchAndRenderKoalas();
   }).catch((response)=>{
     console.log('Error in PUT /koalas: ', response);
   })
 }
-
+// function deleteWarning () {
+//   swal("Are you sure?", {
+//     dangerMode: true,
+//     buttons: true,
+//   })
+  // .then((result)=> {
+  //   if (result === true){
+  //     deleteKoala();
+  //   }
+  // })
+  // }
 function deleteKoala () {
-  let idToDelete = $(this).parent().parent().data().id
-
-  $.ajax({
-    method: 'DELETE',
-    url: `/koalas/${idToDelete}`
+  let idToDelete = $(this).parent().parent().data().id;
+  swal("Are you sure?", {
+    title: "Delete Koala",
+    icon: "warning",
+    dangerMode: true,
+    buttons: true,
   }).then((response) => {
-    fetchAndRenderKoalas ();
-  }).catch((error) => {
-    console.log('delete koalas is broke',error);
+    if (response === true){
+      $.ajax({
+        method: 'DELETE',
+        url: `/koalas/${idToDelete}`
+      }).then((response) => {
+        fetchAndRenderKoalas ();
+      }).catch((error) => {
+        console.log('delete koalas is broke',error);
+      })
+    }
   })
+
 }
